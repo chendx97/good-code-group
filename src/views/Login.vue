@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Cookies from 'js-cookie';
 import http from '@/utils/myFetch';
@@ -8,7 +8,6 @@ import { useUserStore } from '@/stores/user';
 import { COOKIE_TOKEN_KEY } from '@/utils/constants';
 
 const router = useRouter();
-const route = useRoute();
 const userStore = useUserStore();
 
 onMounted(async () => {

@@ -4,8 +4,8 @@ import { useUserStore } from '@/stores/user';
 import defaultAvatar from '@/assets/default-avatar.png';
 
 const userStore = useUserStore();
-
 const showDropdown = ref(false);
+let hideTimeout: number | null = null;
 
 // 处理登录
 const handleLogin = () => {
@@ -16,9 +16,26 @@ const handleLogin = () => {
 const handleMenuClick = (action: string) => {
   if (action === 'logout') {
     userStore.logout();
+    window.location.reload();
   } else if (action === 'feedback') {
     // TODO: 实现意见反馈逻辑
   }
+}
+
+// 显示下拉菜单
+const showMenu = () => {
+  if (hideTimeout) {
+    clearTimeout(hideTimeout);
+    hideTimeout = null;
+  }
+  showDropdown.value = true;
+}
+
+// 隐藏下拉菜单
+const hideMenu = () => {
+  hideTimeout = window.setTimeout(() => {
+    showDropdown.value = false;
+  }, 200);
 }
 </script>
 
@@ -29,8 +46,10 @@ const handleMenuClick = (action: string) => {
       <h1 class="project-name">优秀代码合集</h1>
     </div>
 
-    <div class="header-right" @mouseleave="showDropdown = false">
-      <div class="user-info" @mouseenter="showDropdown = true">
+    <div class="header-right">
+      <div class="user-info" 
+           @mouseenter="showMenu"
+           @mouseleave="hideMenu">
         <img :src="userStore.getUserInfo('avatar') || defaultAvatar" alt="用户头像" class="avatar">
         <span class="username">{{ userStore.getUserInfo('name') || '游客' }}</span>
       </div>
@@ -41,7 +60,10 @@ const handleMenuClick = (action: string) => {
       </div>
 
       <!-- 登录后的下拉菜单 -->
-      <div v-if="userStore.isLoggedIn && showDropdown" class="dropdown-menu">
+      <div v-if="userStore.isLoggedIn && showDropdown" 
+           class="dropdown-menu"
+           @mouseenter="showMenu"
+           @mouseleave="hideMenu">
         <div class="menu-item" @click="handleMenuClick('profile')">个人中心</div>
         <div class="menu-item" @click="handleMenuClick('feedback')">意见反馈</div>
         <div class="menu-item" @click="handleMenuClick('logout')">退出登录</div>

@@ -6,7 +6,6 @@ import { COOKIE_TOKEN_KEY } from '@/utils/constants';
 // 定义用户信息接口
 interface UserInfo {
   name?: string;
-  email?: string;
   avatar?: string;
   token?: string;
 }
@@ -49,4 +48,6 @@ export const useUserStore = defineStore('user', () => {
     updateUserInfo,
     logout,
   };
+}, {
+  persist: true
 });
